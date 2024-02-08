@@ -41,7 +41,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-
+volatile int setD;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -124,9 +124,31 @@ void PendSV_Handler(void)
   */
 void SysTick_Handler(void)
 {
-  /* USER CODE BEGIN SysTick_IRQn 0 */
+	
+	
+	setD++;
+	if(setD == 200) {
+		//toggle PC7
+		GPIOC->ODR ^= (1<<7);
+		setD = 0;
+	}
+	
+	
+	// Initial Idea - Works but I'm not a fan.
+//  /* USER CODE BEGIN SysTick_IRQn 0 */
 
-  /* USER CODE END SysTick_IRQn 0 */
+//		static uint32_t ticks = 0;
+//    const uint32_t toggle_period = 200; // 200ms
+
+//    ticks++;
+//    if (ticks == toggle_period)
+//    {
+//        HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_7); // Toggle PC7 (blue LED)
+//        ticks = 0;
+//		}	
+//		 /* USER CODE END SysTick_IRQn 0 */
+		
+		
   HAL_IncTick();
   /* USER CODE BEGIN SysTick_IRQn 1 */
 

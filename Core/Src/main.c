@@ -62,6 +62,7 @@ void SystemClock_Config(void);
   */
 
 int main(void) {
+	
 	HAL_Init(); // Reset of all peripherals, init the Flash and Systick
 	SystemClock_Config(); //Configure the system clock
 
@@ -73,6 +74,27 @@ __HAL_RCC_GPIOC_CLK_ENABLE(); // Enable the GPIOC clock in the RCC
 	GPIO_NOPULL};
 	HAL_GPIO_Init(GPIOC, &initStr); // Initialize pins PC8 & PC9
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET); // Start PC8 high
+	
+	
+	//Practice 2.2___________
+	/* Set PA0 to input mode (bits 0 and 1 of GPIOA) On*/
+	GPIOA->MODER = 0x28000000; // This is the reset state for GPIOA datasheet page 158
+	// the above code is a cleaner way to set it to input mode. The datasheet calls out bits 0 and 1 both be set to 0 for input mode, but above code accomplishes the same thing.
+	
+	//Set the pins to low speed
+	GPIOA->OSPEEDR &= ~(1<<0); // Sets the 0th bit = 0 -- NOTE: Next bit is a don't care
+	
+	//Enable the pull-down resistor --
+	GPIOA->PUPDR |= 2; // Since pull down is 10 for bits 1 and 0 respectively (2 in decimal) we can just set this register to = 2.
+	
+	//
+	SYSCFG_EXTICR1 &= ~(1<<0) | ~(1<<1) | ~(1<<2) | ~(1<<3);
+	
+	
+	
+	//___________
+	
+	
 	
 	while (1) {
 		HAL_Delay(600); // Delay 600ms
