@@ -124,7 +124,7 @@ void PendSV_Handler(void)
   */
 void SysTick_Handler(void)
 {
-	
+	//  /* USER CODE BEGIN SysTick_IRQn 0 */
 	
 	setD++;
 	if(setD == 200) {
@@ -135,7 +135,6 @@ void SysTick_Handler(void)
 	
 	
 	// Initial Idea - Works but I'm not a fan.
-//  /* USER CODE BEGIN SysTick_IRQn 0 */
 
 //		static uint32_t ticks = 0;
 //    const uint32_t toggle_period = 200; // 200ms

@@ -63,6 +63,9 @@ void SystemClock_Config(void);
 
 int main(void) {
 	
+	
+	// _________________ START FIRST CHECKOFF
+	
 	HAL_Init(); // Reset of all peripherals, init the Flash and Systick
 	SystemClock_Config(); //Configure the system clock
 
@@ -75,8 +78,6 @@ __HAL_RCC_GPIOC_CLK_ENABLE(); // Enable the GPIOC clock in the RCC
 	HAL_GPIO_Init(GPIOC, &initStr); // Initialize pins PC8 & PC9
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET); // Start PC8 high
 	
-	
-	//Practice 2.2___________
 	/* Set PA0 to input mode (bits 0 and 1 of GPIOA) On*/
 	GPIOA->MODER = 0x28000000; // This is the reset state for GPIOA datasheet page 158
 	// the above code is a cleaner way to set it to input mode. The datasheet calls out bits 0 and 1 both be set to 0 for input mode, but above code accomplishes the same thing.
@@ -87,14 +88,26 @@ __HAL_RCC_GPIOC_CLK_ENABLE(); // Enable the GPIOC clock in the RCC
 	//Enable the pull-down resistor --
 	GPIOA->PUPDR |= 2; // Since pull down is 10 for bits 1 and 0 respectively (2 in decimal) we can just set this register to = 2.
 	
-	//
-	SYSCFG_EXTICR1 &= ~(1<<0) | ~(1<<1) | ~(1<<2) | ~(1<<3);
+//	SYSCFG->EXTICR &= ~(1<<0) | ~(1<<1) | ~(1<<2) | ~(1<<3);
+//	SYSCFG_EXTICR1_EXTI0 = 0;
 	
+	//set up interrupt on EXTI line 0
+	EXTI->IMR |= EXTI_IMR_MR0_Msk;
 	
+	//Set rising edge trigger
+	EXTI->RTSR |= (1<< 0);
 	
-	//___________
+	//SYSCFG Clock
+	RCC->APB2ENR |= RCC_APB2ENR_SYSCFGCOMPEN_Msk;
 	
+	//Ensure PA0 routes to SYSCFG
+	SYSCFG->EXTICR[0] &= ~(7 << 0);
 	
+	//Enable in NVIC
+	NVIC_EnableIRQ(EXTI0_1_IRQn);
+	NVIC_SetPriority(EXTI0_1_IRQn, 3); // Change the priority to 1 to starve Systick, to 3 to allow Systick
+	
+	NVIC_SetPriority(SysTick_IRQn, 2);
 	
 	while (1) {
 		HAL_Delay(600); // Delay 600ms
@@ -102,6 +115,15 @@ __HAL_RCC_GPIOC_CLK_ENABLE(); // Enable the GPIOC clock in the RCC
 		HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_6);
 	}
 
+	//___________ END OF FIRST CHECKOFF
+	
+	
+	
+	
+	
+	
+	
+	
 
   /* USER CODE END 3 */
 }
@@ -142,6 +164,61 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+
+void EXTI0_1_IRQHandler(void)
+{
+	unsigned int i = 0;
+	GPIOC->ODR ^= (1<<8); // Flip it
+	GPIOC->ODR ^= (1<<9); // Flip it
+	
+	while(1){
+		//i++;
+	}
+	
+	i=0;
+		while(i < UINT32_MAX-1){
+		i++;
+	}
+	i=0;
+	
+	while(i < UINT32_MAX-1){
+		i++;
+	}
+	i=0;
+	while(i < UINT32_MAX-1){
+		i++;
+	}
+	i=0;
+	while(i < UINT32_MAX-1){
+		i++;
+	}
+	i=0;
+	while(i < UINT32_MAX-1){
+		i++;
+	}
+	i=0;
+	while(i < UINT32_MAX-1){
+		i++;
+	}
+	i=0;
+	while(i < UINT32_MAX-1){
+		i++;
+	}
+	i=0;
+	while(i < UINT32_MAX-1){
+		i++;
+	}
+	i=0;
+	while(i < UINT32_MAX-1){
+		i++;
+	}
+	
+	GPIOC->ODR ^= (1<<8); // Flip it
+	GPIOC->ODR ^= (1<<9); // Flip it
+	
+	EXTI->PR = EXTI_PR_PR0; /* clear exti line 0 flag */
+}
+
 
 /* USER CODE END 4 */
 
