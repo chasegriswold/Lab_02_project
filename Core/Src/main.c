@@ -66,8 +66,12 @@ int main(void) {
 	
 	// _________________ START FIRST CHECKOFF
 	
-	HAL_Init(); // Reset of all peripherals, init the Flash and Systick
+	HAL_Init(); // Reset of all peripherals, init the Flash interface and Systick
 	SystemClock_Config(); //Configure the system clock
+	
+	
+	
+	//RED is 6, BLUE is 7, ORANGE is 8, GREEN is 9
 
 __HAL_RCC_GPIOC_CLK_ENABLE(); // Enable the GPIOC clock in the RCC
 	// Set up a configuration struct to pass to the initialization function
@@ -87,9 +91,6 @@ __HAL_RCC_GPIOC_CLK_ENABLE(); // Enable the GPIOC clock in the RCC
 	
 	//Enable the pull-down resistor --
 	GPIOA->PUPDR |= 2; // Since pull down is 10 for bits 1 and 0 respectively (2 in decimal) we can just set this register to = 2.
-	
-//	SYSCFG->EXTICR &= ~(1<<0) | ~(1<<1) | ~(1<<2) | ~(1<<3);
-//	SYSCFG_EXTICR1_EXTI0 = 0;
 	
 	//set up interrupt on EXTI line 0
 	EXTI->IMR |= EXTI_IMR_MR0_Msk;
@@ -117,12 +118,29 @@ __HAL_RCC_GPIOC_CLK_ENABLE(); // Enable the GPIOC clock in the RCC
 
 	//___________ END OF FIRST CHECKOFF
 	
+	  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+
 	
 	
-	
-	
-	
-	
+  /* USER CODE BEGIN SysInit */
+
+  /* USER CODE END SysInit */
+
+  /* Initialize all configured peripherals */
+  /* USER CODE BEGIN 2 */
+
+  /* USER CODE END 2 */
+
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+  while (1)
+  {
+		GPIOC->BSRR = (1<<6);
+		HAL_Delay(500); //500 ms delay
+		GPIOC->BSRR = (1<<22);
+		HAL_Delay(500); //500 ms delay
+		
+  }
 	
 
   /* USER CODE END 3 */
@@ -167,54 +185,34 @@ void SystemClock_Config(void)
 
 void EXTI0_1_IRQHandler(void)
 {
-	unsigned int i = 0;
-	GPIOC->ODR ^= (1<<8); // Flip it
-	GPIOC->ODR ^= (1<<9); // Flip it
+//	unsigned int i = 0;
+//	GPIOC->ODR ^= (1<<8); // Flip it
+//	GPIOC->ODR ^= (1<<9); // Flip it
+//	
+////	while(1){
+////		//i++;
+////	}
+////	i=0;
+//	
+////	while(i < UINT32_MAX-1){
+////		i++;
+////	}
+////	i=0;
+
+//	GPIOC->ODR ^= (1<<8); // Flip it
+//	GPIOC->ODR ^= (1<<9); // Flip it
 	
-	while(1){
-		//i++;
-	}
+	unsigned int count = 0;
 	
-	i=0;
-		while(i < UINT32_MAX-1){
-		i++;
-	}
-	i=0;
+	GPIOC->ODR ^= (1<<8);
+	GPIOC->ODR ^= (1<<9);
 	
-	while(i < UINT32_MAX-1){
-		i++;
-	}
-	i=0;
-	while(i < UINT32_MAX-1){
-		i++;
-	}
-	i=0;
-	while(i < UINT32_MAX-1){
-		i++;
-	}
-	i=0;
-	while(i < UINT32_MAX-1){
-		i++;
-	}
-	i=0;
-	while(i < UINT32_MAX-1){
-		i++;
-	}
-	i=0;
-	while(i < UINT32_MAX-1){
-		i++;
-	}
-	i=0;
-	while(i < UINT32_MAX-1){
-		i++;
-	}
-	i=0;
-	while(i < UINT32_MAX-1){
-		i++;
-	}
+	while(count < 1500000)
+		count++;
 	
-	GPIOC->ODR ^= (1<<8); // Flip it
-	GPIOC->ODR ^= (1<<9); // Flip it
+	GPIOC->ODR ^= (1<<8);
+	GPIOC->ODR ^= (1<<9);
+	EXTI->PR |= (1<<0);
 	
 	EXTI->PR = EXTI_PR_PR0; /* clear exti line 0 flag */
 }
