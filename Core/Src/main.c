@@ -63,13 +63,8 @@ void SystemClock_Config(void);
 
 int main(void) {
 	
-	
-	// _________________ START FIRST CHECKOFF
-	
 	HAL_Init(); // Reset of all peripherals, init the Flash interface and Systick
 	SystemClock_Config(); //Configure the system clock
-	
-	
 	
 	//RED is 6, BLUE is 7, ORANGE is 8, GREEN is 9
 
@@ -115,8 +110,6 @@ __HAL_RCC_GPIOC_CLK_ENABLE(); // Enable the GPIOC clock in the RCC
 		// Toggle the output state of both PC8 and PC9
 		HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_6);
 	}
-
-	//___________ END OF FIRST CHECKOFF
 	
 	  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
 
@@ -185,24 +178,8 @@ void SystemClock_Config(void)
 
 void EXTI0_1_IRQHandler(void)
 {
-//	unsigned int i = 0;
-//	GPIOC->ODR ^= (1<<8); // Flip it
-//	GPIOC->ODR ^= (1<<9); // Flip it
-//	
-////	while(1){
-////		//i++;
-////	}
-////	i=0;
-//	
-////	while(i < UINT32_MAX-1){
-////		i++;
-////	}
-////	i=0;
-
-//	GPIOC->ODR ^= (1<<8); // Flip it
-//	GPIOC->ODR ^= (1<<9); // Flip it
 	
-	unsigned int count = 0;
+	volatile int count = 0;
 	
 	GPIOC->ODR ^= (1<<8);
 	GPIOC->ODR ^= (1<<9);
@@ -212,7 +189,7 @@ void EXTI0_1_IRQHandler(void)
 	
 	GPIOC->ODR ^= (1<<8);
 	GPIOC->ODR ^= (1<<9);
-	EXTI->PR |= (1<<0);
+	//EXTI->PR |= (1<<0);
 	
 	EXTI->PR = EXTI_PR_PR0; /* clear exti line 0 flag */
 }
